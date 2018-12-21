@@ -1,21 +1,23 @@
 <template>
-  <div class="sidebar">
-    <NavLinks/>
-    <slot name="top"/>
-    <ul class="sidebar-links" v-if="items.length">
-      <li v-for="(item, i) in items" :key="i">
-        <SidebarGroup
-          v-if="item.type === 'group'"
-          :item="item"
-          :first="i === 0"
-          :open="i === openGroupIndex"
-          :collapsable="item.collapsable || item.collapsible"
-          @toggle="toggleGroup(i)"
-        />
-        <SidebarLink v-else :item="item"/>
-      </li>
-    </ul>
-    <slot name="bottom"/>
+  <div class="sidebar-wrapper">
+    <div class="sidebar">
+      <NavLinks/>
+      <slot name="top"/>
+      <ul class="sidebar-links" v-if="items.length">
+        <li v-for="(item, i) in items" :key="i">
+          <SidebarGroup
+            v-if="item.type === 'group'"
+            :item="item"
+            :first="i === 0"
+            :open="i === openGroupIndex"
+            :collapsable="item.collapsable || item.collapsible"
+            @toggle="toggleGroup(i)"
+          />
+          <SidebarLink v-else :item="item"/>
+        </li>
+      </ul>
+      <slot name="bottom"/>
+    </div>
   </div>
 </template>
 
@@ -80,8 +82,10 @@ function resolveOpenGroupIndex (route, items) {
 
 <style lang="stylus">
 @import './styles/config.styl'
-
+.sidebar-wrapper
+  position relative
 .sidebar
+  overflow hidden
   ul
     padding 0
     margin 0
@@ -100,7 +104,13 @@ function resolveOpenGroupIndex (route, items) {
       font-size 1.1em
       padding 0.5rem 0 0.5rem 1.5rem
   .sidebar-links
-    padding 1.5rem 0
+    padding 32px 0 32px 23px
+    position absolute
+    overflow-y scroll
+    overflow-x hidden
+    width 100%
+    height 100%
+    right -15px
 
 @media (max-width: $MQMobile)
   .sidebar

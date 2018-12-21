@@ -2,23 +2,26 @@
   <header class="navbar">
     <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')"/>
 
-    <router-link
-      :to="$localePath"
-      class="home-link"
-    >
-      <img
-        class="logo"
-        v-if="$site.themeConfig.logo"
-        :src="$withBase($site.themeConfig.logo)"
-        :alt="$siteTitle"
-      >
+    <div class="left-nav">
+      <router-link
+        :to="$localePath"
+        class="home-link logo"
+        v-if="$site.themeConfig.logo">
+        <img
+          :src="$withBase($site.themeConfig.logo)"
+          :alt="$siteTitle"
+        >
+      </router-link>
+      <router-link
+        :to="$localePath"
+        class="home-link"
+        v-if="$siteTitle">
       <span
         ref="siteName"
-        class="site-name"
-        v-if="$siteTitle"
-        :class="{ 'can-hide': $site.themeConfig.logo }"
+        class="header-title"
+        :class.can-hide="$site.themeConfig.logo"
       >{{ $siteTitle }}</span>
-    </router-link>
+      </router-link>
 
       <!-- <div class="line"></div> -->
 
@@ -27,14 +30,9 @@
         :options="algolia"
       />
       <SearchBox v-else-if="$site.themeConfig.search !== false"/>
-
-    <div
-      class="links"
-      :style="{
-        'max-width': linksWrapMaxWidth + 'px'
-      }"
-    >
-      <a :href="$site.themeConfig.try_free" target="_blank" class="btn">
+    </div>
+    <div class="right-nav">
+      <a :href="$site.themeConfig.try_free" target="_blank" class="btn btn-flat">
         Try Free
       </a>
 
@@ -93,52 +91,53 @@ function css (el, property) {
 </script>
 
 <style lang="stylus">
-@import './styles/config.styl'
+  @import './styles/config.styl'
 
-$navbar-vertical-padding = 0.7rem
-$navbar-horizontal-padding = 1.5rem
+  $navbar-vertical-padding = 0.7rem
+  $navbar-horizontal-padding = 1.5rem
 
-.navbar
-  padding $navbar-vertical-padding $navbar-horizontal-padding
-  line-height $navbarHeight - 1.4rem
-  position relative
-  a, span, img
-    display inline-block
-  .logo
-    height $navbarHeight - 1.4rem
-    min-width $navbarHeight - 1.4rem
-    margin-right 0.8rem
-    vertical-align top
-  .site-name
-    font-size 1.3rem
-    font-weight 600
-    color white
-    position relative
-  .links
-    padding-left 1.5rem
-    box-sizing border-box
-    background-color $mainColor
-    white-space nowrap
-    font-size 0.9rem
-    position absolute
-    right $navbar-horizontal-padding
-    top $navbar-vertical-padding
-    display flex
-    .search-box
-      flex: 0 0 auto
-      vertical-align top
-    .nav-links
-      flex 1
-
-@media (max-width: $MQMobile)
   .navbar
-    padding-left 4rem
-    .can-hide
-      display none
-    .links
-      padding-left 1.5rem
+    position relative
+    display flex
+    justify-content space-between
+    align-items center
+    height 64px
+    padding 0 30px 0 41px
+    .left-nav, .right-nav
+      display flex
+      align-items center
+    .header-title
+      font-size: 16px;
+      font-weight: 600;
+      color white
+      margin-left 26px
+    .logo
+      width 143px
+      height 24px
+    .search-box
+      border-left 1px solid rgba(255, 255, 255, 0.5)
+      margin-left 15px
+    @media (max-width: $MQNarrow)
+      .search-box
+        border-left 0
+        margin-left 0
+    @media (max-width: $MQMobile)
+      .header-title
+        display none
+      .logo
+        width 24px
+        height 24px
+        overflow hidden
 
-.btn
+  @media (max-width: $MQMobile)
+    .navbar
+      padding-left 4rem
+      .can-hide
+        display none
+      .links
+        padding-left 1.5rem
+
+  .btn
     // -webkit-appearance: button;
     // -moz-appearance: button;
     // appearance: button;
@@ -163,7 +162,7 @@ $navbar-horizontal-padding = 1.5rem
     font-weight bold
 
 
-.btn:after
+  .btn:after
     content: "";
     background: #fff;
     display: block;
@@ -176,9 +175,17 @@ $navbar-horizontal-padding = 1.5rem
     transition: all 0.8s
 
 
-.btn:active:after
+  .btn:active:after
     padding: 0;
     margin: 0;
     opacity: 1;
     transition: 0s
+  .btn-flat
+    border 2px solid white
+    width 111px
+    height 43px
+    border-radius 4px
+    display flex
+    align-items center
+    justify-content center
 </style>

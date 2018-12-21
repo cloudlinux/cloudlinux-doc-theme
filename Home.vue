@@ -84,7 +84,9 @@ export default {
       display block
       margin 3rem auto 1.5rem
     h1
-      font-size 3rem
+      font-size 30px
+      color #0d1a26
+      font-weight normal
     h1, .description, .action
       margin 1.8rem auto
     .description

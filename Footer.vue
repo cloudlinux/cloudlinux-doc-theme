@@ -1,20 +1,22 @@
 <template>
   <div class="footer">
       <!-- <div class="sidebar-width"></div> -->
-      <div>
+      <div class="footer-item">
         <a :href="$site.themeConfig.cloudlinuxSite">
           <img src="./we-are-cloudlinux.svg" alt="We are Cloudlinux">
         </a>
       </div>
-      <div>2018. CloudLinux Inc</div>
-      <div>
-          <div v-for="item in $site.themeConfig.bottomLinks" :key="item">
+      <div class="cl-copyright footer-item">2018. CloudLinux Inc</div>
+      <div class="footer-links footer-item">
+          <div class="footer-link"
+               v-for="item in $site.themeConfig.bottomLinks"
+               :key="item">
               <a :href="item.url" target="_blank">{{ item.text }}</a>
           </div>
       </div>
 
-      <div class="social">
-        <span>Stay in touch</span>
+      <div class="social footer-item">
+        <span class="social-message">Stay in touch</span>
         <a v-for="item in $site.themeConfig.social"
             :key="item"
             :href="item.url" target="_blank">
@@ -32,13 +34,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@require './styles/config.styl'
-.footer
-    margin-left $sidebarWidth + 2rem
+  @require './styles/config.styl'
+  .footer
+    margin-left 20px
+    margin-right 20px
     color $grayTextColor
     text-align center
     border-top 1px solid $borderColor
-    height 102px
+    height 103px
     // width 100%
     background #fff
     display flex
@@ -46,34 +49,59 @@ export default {
     justify-content space-around
     align-items center
     // margin-left 2rem
-
-    div
-        margin 5px
+    .footer-item
+      height 70px
+      display flex
+      align-items center
+    .cl-copyright
+      font-size 12px
+      padding 10px
+      font-weight 600
+      line-height 4
+      color #d8d8d8
+    .footer-links
+      display flex
+      .footer-link
         font-size 12px
-        display inline-flex
-
-    a
-        display inline-block
-        margin-left 10px
+        font-weight 600
+        line-height 4
+        color #0075b2
+        padding 11px
     img
-        cursor pointer
+      cursor pointer
 
-.social
+  .social
     display flex
     justify-content center
     align-items center
     padding-left 20px
+    font-size 12px
+    color #314659
+    .social-message
+      padding 12px
+      position: relative
+      &:before
+        content ''
+        position absolute
+        width 1px
+        height 19px
+        left 0
+        top 50%
+        transform translate(0, -50%)
+        background #f2f4f5
     a
-        margin-left 0px
-        margin-right -5px
+      margin-right 6px
+      &:last-child
+        margin-right 0
 
-.sidebar-width
+
+  .sidebar-width
     width $sidebarWidth + 2rem
 
-@media (max-width: $MQMobile)
-  .footer
-    justify-content center
-    margin-left 0
-    div
-      display block
+  @media (max-width: $MQMobile)
+    .footer
+      justify-content center
+      margin-left 0
+      div
+        display block
 </style>

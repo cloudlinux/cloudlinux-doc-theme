@@ -1,87 +1,83 @@
+<template>
+  <router-link tag="div" class="item-wrapper" :to="path">
+    <div class="sidebar-link">
+      <i class="material-icons" v-if="links.length" v-on:click="openLink($event)">
+        {{ open ? 'expand_less' : 'expand_more' }}
+      </i>
+      <div class="empty-icon" v-else></div>
+      <span>{{title}}</span>
+    </div>
+    <SidebarLink v-if="links.length && open"
+                 v-for="header in links"
+                 :item="header"/>
+  </router-link>
+</template>
 <script>
-import { isActive, hashRE, groupHeaders } from './util'
+  import SidebarLink from './SidebarLink.vue'
 
-export default {
-  functional: true,
+  export default {
 
-  props: ['item'],
+    name: 'SidebarLink',
 
-  render (h, { parent: { $page, $site, $route }, props: { item }}) {
-    // use custom active class matching logic
-    // due to edge case of paths ending with / + hash
-    const selfActive = isActive($route, item.path)
-    // for sidebar: auto pages, a hash link should be active if one of its child
-    // matches
-    const active = item.type === 'auto'
-      ? selfActive || item.children.some(c => isActive($route, item.basePath + '#' + c.slug))
-      : selfActive
-    const link = renderLink(h, item.path, item.title || item.path, active)
-    const configDepth = $page.frontmatter.sidebarDepth != null
-      ? $page.frontmatter.sidebarDepth
-      : $site.themeConfig.sidebarDepth
-    const maxDepth = configDepth == null ? 1 : configDepth
-    const displayAllHeaders = !!$site.themeConfig.displayAllHeaders
-    if (item.type === 'auto') {
-      return [link, renderChildren(h, item.children, item.basePath, $route, maxDepth)]
-    } else if ((active || displayAllHeaders) && item.headers && !hashRE.test(item.path)) {
-      const children = groupHeaders(item.headers)
-      return [link, renderChildren(h, children, item.path, $route, maxDepth)]
-    } else {
-      return link
+    props: ['item'],
+    components: { SidebarLink },
+
+    data() {
+      return {
+        open: false,
+        path: '',
+        title: '',
+        links: []
+      }
+    },
+
+    methods: {
+      openLink(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.open = !this.open;
+      },
+    },
+
+    mounted() {
+      this.links = (this.item.headers || []).map(header => ({
+        ...header,
+        parentLink: this.item.path || this.item.parentLink
+      }));
+      this.path = (this.item.path || this.item.parentLink) + '#' + (this.item.slug || '');
+      this.open = this.item.open;
+      this.title = this.item.title;
     }
   }
-}
-
-function renderLink (h, to, text, active) {
-  return h('router-link', {
-    props: {
-      to,
-      activeClass: '',
-      exactActiveClass: ''
-    },
-    class: {
-      active,
-      'sidebar-link': true
-    }
-  }, text)
-}
-
-function renderChildren (h, children, path, route, maxDepth, depth = 1) {
-  if (!children || depth > maxDepth) return null
-  return h('ul', { class: 'sidebar-sub-headers' }, children.map(c => {
-    const active = isActive(route, path + '#' + c.slug)
-    return h('li', { class: 'sidebar-sub-header' }, [
-      renderLink(h, path + '#' + c.slug, c.title, active),
-      renderChildren(h, c.children, path, route, maxDepth, depth + 1)
-    ])
-  }))
-}
 </script>
 
 <style lang="stylus">
 @import './styles/config.styl'
-
-.sidebar .sidebar-sub-headers
-  padding-left 1rem
-  font-size 0.95em
-
-a.sidebar-link
-  font-weight 400
-  display inline-block
-  color $textColor
-  border-left 0.25rem solid transparent
-  padding 0.35rem 1rem 0.35rem 1.25rem
-  line-height 1.4
-  width: 100%
-  box-sizing: border-box
+.empty-icon
+  width 16px
+  height 16px
+.material-icons
+  line-height 14px
+  width 14px
+  height 14px
+  color #b5bbc1
+.item-wrapper
+  padding-left 13px
+  cursor pointer
+  &.router-link-active
+    > .sidebar-link
+      border-right 3px solid $accentColor
+.sidebar-link
+  width 100%
+  font-size 14px
+  line-height 3.43
+  color #314659
+  display flex
+  align-items center
+  > span
+    padding-left 21px
   &:hover
     color $accentColor
-  &.active
-    font-weight 600
-    color $accentColor
-    border-left-color $accentColor
-  .sidebar-group &
-    padding-left 2rem
   .sidebar-sub-headers &
     padding-top 0.25rem
     padding-bottom 0.25rem

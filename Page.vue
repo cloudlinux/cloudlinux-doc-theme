@@ -58,13 +58,16 @@
     </div>
 
     <slot name="bottom"/>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+import Footer from './Footer.vue'
 import { resolvePage, normalize, outboundRE, endingSlashRE } from './util'
 
 export default {
+  components: { Footer },
   props: ['sidebarItems'],
 
   computed: {
@@ -197,9 +200,6 @@ function find (page, items, offset) {
 <style lang="stylus">
 @import './styles/config.styl'
 @require './styles/wrapper.styl'
-
-.page
-  padding-bottom 2rem
 
 .page-edit
   @extend $wrapper

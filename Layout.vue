@@ -52,7 +52,6 @@
       />
     </Page>
 
-    <Footer />
     <SWUpdatePopup :updateEvent="swUpdateEvent"/>
   </div>
 </template>
